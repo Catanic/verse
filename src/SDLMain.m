@@ -300,7 +300,17 @@ static void CustomApplicationMain (int argc, char **argv)
     /* Hand off to main application code */
     gCalledAppMainline = TRUE;
     status = SDL_main (gArgc, gArgv);
-    
+
+    /* Free duplicated command line arguments */
+    if (gArgv)
+    {
+        int i;
+        for (i = 0; i < gArgc; ++i)
+            SDL_free(gArgv[i]);
+        SDL_free(gArgv);
+        gArgv = NULL;
+    }
+
     /* We're done, thank you for playing */
     exit(status);
 }
@@ -358,9 +368,10 @@ int main (int argc, char **argv)
 {
     /* Copy the arguments into a global variable */
     /* This is passed if we are launched by double-clicking */
-    if ( argc >= 2 && strncmp (argv[1], "-psn", 4) == 0 ) {
-        gArgv = (char **) SDL_malloc(sizeof (char *) * 2);
-        gArgv[0] = argv[0];
+    if (argc >= 2 && strncmp(argv[1], "-psn", 4) == 0)
+    {
+        gArgv = (char **) SDL_malloc(sizeof(char *) * 2);
+        gArgv[0] = SDL_strdup(argv[0]);
         gArgv[1] = NULL;
         gArgc = 1;
         gFinderLaunch = YES;
@@ -369,9 +380,10 @@ int main (int argc, char **argv)
     {
         int i;
         gArgc = argc;
-        gArgv = (char **) SDL_malloc(sizeof (char *) * (argc+1));
-        for (i = 0; i <= argc; i++)
-            gArgv[i] = argv[i];
+        gArgv = (char **) SDL_malloc(sizeof(char *) * (argc + 1));
+        for (i = 0; i < argc; i++)
+            gArgv[i] = SDL_strdup(argv[i]);
+        gArgv[argc] = NULL;
         gFinderLaunch = NO;
     }
     
