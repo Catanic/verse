@@ -6,8 +6,16 @@ for performance analysis.
 
 ## Prerequisites
 
-Enable developer mode on the Deck and install build tools and libraries
-including Mesa for OpenGL headers:
+Enable developer mode on the Deck. The build script installs the following
+packages if they are missing:
+
+```
+base-devel cmake git \
+    sdl2 sdl2_image sdl2_mixer sdl2_ttf sdl2_net sdl2_gfx \
+    libpng zlib freetype2 harfbuzz libxml2 curl mesa
+```
+
+If you prefer to install them manually:
 
 ```bash
 sudo pacman -S --needed base-devel cmake git \
@@ -17,10 +25,11 @@ sudo pacman -S --needed base-devel cmake git \
 
 ## Building
 
-Run the helper script to configure and compile with Tracy support:
+Run the helper script to install dependencies, configure and compile with
+Tracy support. Use `sudo` if prompted for package installation:
 
 ```bash
-./tools/build_steamdeck_tracy.sh
+sudo ./tools/build_steamdeck_tracy.sh
 ```
 
 The compiled client is located at
