@@ -22,6 +22,7 @@ and some libraries. The required libraries are:
 * SDL_net           http://www.libsdl.org/projects/SDL_net/
 * SDL_ttf           http://www.libsdl.org/projects/SDL_ttf/
 * SDL_gfx           http://www.ferzkopp.net/joomla/software-mainmenu-14/4-ferzkopps-linux-software/19-sdlgfx
+* OpenGL            https://www.opengl.org/
 * libxml2           http://www.xmlsoft.org/
 * zlib 1.2.x        http://www.gzip.org/zlib/
 * libcurl           http://curl.haxx.se/libcurl/
@@ -29,7 +30,9 @@ and some libraries. The required libraries are:
 On most distributions the development packages for these libraries must be
 installed before building.  For example, on Debian or Ubuntu you can run:
 
-z16sra-codex/fix-cmake-configuration-errors
+z16sra-codex/fix-csudo pacman -S --needed base-devel cmake git \
+    sdl2 sdl2_image sdl2_mixer sdl2_ttf sdl2_net sdl2_gfx \
+    libpng zlib freetype2 harfbuzz libxml2 curl mesamake-configuration-errors
     sudo apt install build-essential cmake pkg-config \
         libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev \
         libsdl2-net-dev libsdl2-ttf-dev libsdl2-gfx-dev \
@@ -39,8 +42,8 @@ On Arch Linux and derivatives the equivalent command is:
 
 z16sra-codex/fix-cmake-configuration-errors
     sudo pacman -S base-devel cmake sdl2 sdl2_image \
-
         sdl2_mixer sdl2_net sdl2_ttf sdl2_gfx curl
+main
 
 If you've cloned the Git repository, you will also need these tools to compile:
 
