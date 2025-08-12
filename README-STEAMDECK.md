@@ -37,8 +37,9 @@ Run the helper script to install dependencies, configure and compile with
 Tracy support. Run it as your regular user; it will prompt for your password
 to install packages when required:
 
+
 ```bash
-./tools/build_steamdeck_tracy.sh
+sudo ./tools/build_steamdeck_tracy.sh
 ```
 
 The compiled client is located at
