@@ -44,6 +44,7 @@ Azure CI: [![Build Status macosx](https://dev.azure.com/manaplus/ManaPlus/_apis/
  - [libpng](http://www.libpng.org/) (save screenshots)
  - [zlib](http://zlib.net/) (Archives)
 
+z16sra-codex/fix-cmake-configuration-errors
 Make sure the development headers for these libraries are installed. On
 Debian or Ubuntu the required packages can be installed with:
 
@@ -54,6 +55,7 @@ Debian or Ubuntu the required packages can be installed with:
 
 For Arch Linux and derivatives use:
 
+z16sra-codex/fix-cmake-configuration-errors
     sudo pacman -S base-devel cmake sdl2 sdl2_image \
         sdl2_mixer sdl2_net sdl2_ttf sdl2_gfx curl
 
