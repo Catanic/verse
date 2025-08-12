@@ -1,7 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
-# Build Mana Verse Client with Tracy profiling support on Steam Deck.
+# Build Mana Verse Client with Tracy profiling support on Steam Deck.  libpng zlib freetype2 harfbuzz libxml2 curl
+  mesa libglvnd glu
+  libjxl libjpeg-turbo libtiff libavif libwebp
+  bzip2 brotli glib2 graphite2 libidn2 zstd krb5 openssl
+  libpsl libssh2 libnghttp2 libnghttp3 xz icu
 # This script installs required dependencies and then configures and
 # compiles the project using SDL2 and Tracy.
 # Usage: ./tools/build_steamdeck_tracy.sh
