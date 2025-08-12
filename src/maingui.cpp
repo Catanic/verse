@@ -21,6 +21,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef TRACY_ENABLE
+#include "Tracy.hpp"
+#endif
+
 #include "maingui.h"
 
 #include "client.h"
@@ -141,6 +145,9 @@ int main(int argc, char *argv[])
 int mainGui(int argc, char *argv[])
 #endif  // ANDROID
 {
+#ifdef TRACY_ENABLE
+    ZoneScopedN("Main");
+#endif
 #ifdef __SWITCH__
     nxInit();
 #endif
@@ -208,6 +215,9 @@ int mainGui(int argc, char *argv[])
 
 int main(int argc, char *argv[])
 {
+#ifdef TRACY_ENABLE
+    ZoneScopedN("Main");
+#endif
     logger = new Logger;
     SDL::initLogger();
     VirtFs::init(argv[0]);

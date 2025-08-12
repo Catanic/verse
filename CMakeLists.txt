@@ -31,7 +31,7 @@ OPTION(WITH_OPENGL "Enable OpenGL support" ON)
 OPTION(USE_SDL2 "Build with SDL 2.0 instead of 1.2" OFF)
 OPTION(ENABLE_NLS "Enable building of tranlations" ON)
 OPTION(ENABLE_TMWA "Enable tmwA support" ON)
-OPTION(ENABLE_TRACY "Enable Tracy profiler" OFF)
+OPTION(ENABLE_TRACY "Enable Tracy profiling in the client" ON)
 
 IF (WIN32)
     SET(PKG_DATADIR ".")
