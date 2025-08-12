@@ -17,10 +17,12 @@ fi
 
 # Packages needed to build on Steam Deck
 PACKAGES=(
-  base-devel cm<<<<<<< obn4gu-codex/identify-and-fix-steam-deck-build-issuesake git
+  base-devel cmake git
+  glibc linux-api-headers gcc
   sdl2 sdl2_image sdl2_mixer sdl2_ttf sdl2_net sdl2_gfx
-  libpng zlib freetype<<<<<<< obn4gu-codex/identify-and-fix-steam-deck-build-issues2 harfbuzz libxml2 curl
+  libpng zlib freetype2 harfbuzz libxml2 curl
   mesa libglvnd glu
+  libx11 xorgproto libxext libxrandr libxi libxrender libxtst
   libjxl libjpeg-turbo libtiff libavif libwebp
   bzip2 brotli glib2 graphite libidn2 zstd krb5 openssl
   libpsl libssh2 libnghttp2 libnghttp3 xz icu
@@ -36,9 +38,31 @@ fi
 
 # Ensure pkg-config searches the system directories
 export PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-/usr/lib/pkgconfig:/usr/share/pkgconfig}"
+export CFLAGS="${CFLAGS:-} -UDEBUG"
+export CXXFLAGS="${CXXFLAGS:-} -UDEBUG"
+
+check_header() { echo "#include <$1>" | cc -E - >/dev/null 2>&1; }
+
+if ! check_header "sys/types.h"; then
+  echo "Missing standard headers. Install: sudo pacman -S glibc linux-api-headers gcc" >&2
+  exit 1
+fi
+
+if ! check_header "GL/gl.h"; then
+  echo "Missing OpenGL headers. Install: sudo pacman -S mesa libglvnd glu" >&2
+  exit 1
+fi
+
+if ! check_header "X11/Xlib.h"; then
+  echo "Missing X11 headers. Install: sudo pacman -S libx11 xorgproto libxext libxrandr libxi libxrender libxtst" >&2
+  exit 1
+fi
+
 cmake -S "$ROOT_DIR" -B "$BUILD_DIR" \
   -DCMAKE_BUILD_TYPE=RelWithDebInfo \
   -DENABLE_TRACY=ON \
-  -DUSE_SDL2=ON
+  -DUSE_SDL2=ON \
+  -DCMAKE_C_FLAGS="$CFLAGS" \
+  -DCMAKE_CXX_FLAGS="$CXXFLAGS"
 
 cmake --build "$BUILD_DIR" -j"$(nproc)"

@@ -28,6 +28,10 @@
 #undef INPUT
 #endif  // INPUT
 
+#ifdef DEBUG
+#undef DEBUG
+#endif  // DEBUG
+
 PRAGMAMINGW(GCC diagnostic push)
 PRAGMAMINGW(GCC diagnostic ignored "-Wshadow")
 
