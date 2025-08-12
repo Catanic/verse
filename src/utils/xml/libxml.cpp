@@ -23,6 +23,13 @@
 
 #ifdef ENABLE_LIBXML
 
+#ifndef LIBXML_LEGACY
+#define LIBXML_LEGACY 1
+#endif
+#include <libxml/parser.h>
+#include <libxml/tree.h>
+#include <libxml/xmlerror.h>
+
 #include "utils/xml/libxml.h"
 
 #include "fs/virtfs/fs.h"

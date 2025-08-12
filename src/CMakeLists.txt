@@ -2248,7 +2248,10 @@ ELSE()
 ENDIF(ENABLE_TMWA)
 
 ADD_EXECUTABLE(manaplus WIN32 ${SRCS} ${SRCS_EVOL})
-target_compile_definitions(manaplus PRIVATE LIBXML_LEGACY)
+find_package(LibXml2 REQUIRED)
+target_include_directories(manaplus PRIVATE ${LIBXML2_INCLUDE_DIR})
+target_link_libraries(manaplus PRIVATE LibXml2::LibXml2)
+target_compile_definitions(manaplus PRIVATE LIBXML_LEGACY=1)
 #ADD_EXECUTABLE(dyecmd WIN32 ${DYE_CMD_SRCS})
 
 IF (USE_SDL2)
