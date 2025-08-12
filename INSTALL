@@ -26,6 +26,19 @@ and some libraries. The required libraries are:
 * zlib 1.2.x        http://www.gzip.org/zlib/
 * libcurl           http://curl.haxx.se/libcurl/
 
+On most distributions the development packages for these libraries must be
+installed before building.  For example, on Debian or Ubuntu you can run:
+
+    sudo apt install build-essential cmake pkg-config \\
+        libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev \\
+        libsdl2-net-dev libsdl2-ttf-dev libsdl2-gfx-dev \\
+        libcurl4-openssl-dev
+
+On Arch Linux and derivatives the equivalent command is:
+
+    sudo pacman -S base-devel cmake sdl2 sdl2_image \\
+        sdl2_mixer sdl2_net sdl2_ttf sdl2_gfx curl
+
 If you've cloned the Git repository, you will also need these tools to compile:
 
 * GNU automake 1.9  http://www.gnu.org/software/automake/
