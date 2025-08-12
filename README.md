@@ -39,10 +39,11 @@ Azure CI: [![Build Status macosx](https://dev.azure.com/manaplus/ManaPlus/_apis/
 ### Dependencies:
 
  - [SDL](http://libsdl.org/), SDL_image, SDL_mixer, SDL_ttf, SDL_net (Media framework), SDL_gfx
+ - [OpenGL](https://www.opengl.org/) (hardware rendering)
  - [libxml2](http://xmlsoft.org/) or [pugixml](http://pugixml.org/) or [tinyxml2](http://www.grinninglizard.com/tinyxml2/) (XML parsing and writing)
  - [libcurl](http://curl.haxx.se/) (HTTP downloads)
  - [libpng](http://www.libpng.org/) (save screenshots)
- - [zlib](http://zlib.net/) (Archives)
+  - [zlib](http://zlib.net/) (Archives)
 
 Make sure the development headers for these libraries are installed. On
 Debian or Ubuntu the required packages can be installed with:
@@ -51,13 +52,13 @@ Debian or Ubuntu the required packages can be installed with:
         libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev \
         libsdl2-net-dev libsdl2-ttf-dev libsdl2-gfx-dev \
         libcurl4-openssl-dev libpng-dev zlib1g-dev \
-        libfreetype6-dev libharfbuzz-dev
+        libfreetype6-dev libharfbuzz-dev libgl1-mesa-dev
 
 For Arch Linux and derivatives use:
 
     sudo pacman -S base-devel cmake sdl2 sdl2_image \
         sdl2_mixer sdl2_net sdl2_ttf sdl2_gfx curl \
-        libpng zlib freetype2 harfbuzz
+        libpng zlib freetype2 harfbuzz mesa
 
 #### Optional dependencies:
 
