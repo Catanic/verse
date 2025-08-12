@@ -1,0 +1,19 @@
+# Maintainer: Aline Ferraz <freya.df@gmail.com>
+
+pkgname=manaverse-git
+pkgver=@PACKAGE_VERSION@
+pkgrel=1
+pkgdesc="ManaVerse is a 2D MMORPG game advanced client for games based on eAthena fork The Mana World (tmwAthena/Evol2)."
+arch=('i686' 'x86_64')
+url="https://manaverse.germantmw.de"
+depends=('libxml2' 'sdl_image' 'sdl_mixer' 'sdl_net' 'sdl_ttf' 'sdl_gfx')
+license=('GPL2')
+
+build() {
+cd ${startdir}/
+autoreconf -i
+./configure --prefix=/usr
+make clean
+make || return 1
+make DESTDIR=$startdir/pkg install
+} 

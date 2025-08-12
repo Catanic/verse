@@ -1,0 +1,287 @@
+#!/usr/bin/env bash
+
+function check_is_run {
+    kill -0 ${PID}
+    if [ "$?" != 0 ]; then
+        echo "Error: process look like crashed"
+        cat logs/run.log
+        echo "Run with gdb"
+        cp ./src/manaplus ./logs/
+        cp -r core* ./logs/
+        sleep 10
+        COREFILE=$(find . -maxdepth 1 -name "core*" | head -n 1)
+        if [[ -f "$COREFILE" ]]; then
+            gdb -c "$COREFILE" ./src/manaplus -ex "thread apply all bt" -ex "set pagination 0" -batch
+        fi
+        exit 1
+    fi
+}
+
+function check_assert {
+    grep -A 20 "Assert:" "${HOME}/.local/share/mana/manaverse.log"
+    if [ "$?" == 0 ]; then
+        echo "Assert found in log"
+        exit 1
+    fi
+}
+
+function wait_for_servers_list {
+    n=0
+    while true; do
+        echo "wait for servers list ${n}"
+        check_is_run
+        # check here
+        grep "Skipping servers list update" "${HOME}/.local/share/mana/manaverse.log" && return
+        grep "Servers list updated" "${HOME}/.local/share/mana/manaverse.log" && return
+        grep "Error: servers list updating error" "${HOME}/.local/share/mana/manaverse.log"
+        if [ "$?" == 0 ]; then
+            echo "Servers list downloading error"
+            exit 1
+        fi
+
+        if [[ $n -ge 150 ]]; then
+            break
+        fi
+        sleep 5
+        n=$((n+1))
+    done
+    echo "Waiting time for servers list update is up"
+    exit 1
+}
+
+function run {
+    ./src/manaplus --hide-cursor --enable-ipc --renderer=0 >logs/run.log 2>&1 &
+    export PID=$!
+    echo "manaverse PID: ${PID}"
+    sleep 15
+    echo "pause after run"
+    wait_for_servers_list
+    check_assert
+}
+
+function kill_app {
+    kill -s SIGTERM ${PID}
+    export RET=$?
+
+    sleep 10
+
+    if [ "${RET}" != 0 ]; then
+        echo "Error: process not responsing to termination signal"
+        kill -s SIGKILL ${PID}
+        cat logs/run.log
+        exit 1
+    fi
+}
+
+function final_log {
+    if [[ ! -s logs/run.log ]]; then
+        echo "Error: no output"
+        exit 1
+    fi
+
+    cat logs/run.log
+
+    if grep "[.]cpp" logs/run.log; then
+        echo "Error: possible leak detected, see above"
+        exit 1
+    fi
+}
+
+function send_command {
+    echo -n "$1" | nc 127.0.0.1 44007
+    sleep 5
+    check_is_run
+    check_assert
+}
+
+function check_exists {
+    if [ ! -f "logs/home/Desktop/ManaPlus/$1" ]; then
+        sleep 7
+        if [ ! -f "logs/home/Desktop/ManaPlus/$1" ]; then
+            echo "Error: image $1 not exists"
+            exit 1
+        fi
+    fi
+    if [ ! -f "logs/home/Desktop/ManaPlus/$2" ]; then
+        sleep 7
+        if [ ! -f "logs/home/Desktop/ManaPlus/$2" ]; then
+            echo "Error: image $2 not exists"
+            exit 1
+        fi
+    fi
+}
+
+function imagesdiff {
+    check_exists "$1" "$2"
+    diff "logs/home/Desktop/ManaPlus/$1" "logs/home/Desktop/ManaPlus/$2"
+    if [ "$?" == 0 ]; then
+        echo "Error: images '$1' and '$2' is same."
+        exit 1
+    fi
+}
+
+function imagessame {
+    check_exists "$1" "$2"
+    diff "logs/home/Desktop/ManaPlus/$1" "logs/home/Desktop/ManaPlus/$2"
+    if [ "$?" != 0 ]; then
+        echo "Error: images '$1' and '$2' is different."
+        exit 1
+    fi
+}
+
+if [[ -z "${ABOUTYOFFSET}" ]]; then
+    export ABOUTYOFFSET="395"
+fi
+
+run
+check_is_run
+
+send_command "/screenshot run.png"
+
+# send down key
+send_command "/guikey -960 keyGUIDown"
+send_command "/screenshot downkey.png"
+imagesdiff run.png downkey.png
+
+# send up key
+send_command "/guikey -961 keyGUIUp"
+send_command "/screenshot run2.png"
+imagessame run.png run2.png
+
+# open help
+send_command "/help"
+send_command "/screenshot help.png"
+imagesdiff run2.png help.png
+send_command "/help"
+send_command "/screenshot run3.png"
+imagessame run2.png run3.png
+
+# open settings
+send_command "/setup"
+send_command "/screenshot setup.png"
+imagesdiff run3.png setup.png
+send_command "/setup"
+send_command "/screenshot run4.png"
+imagessame run3.png run4.png
+
+# set focus to servers window
+send_command "/sendmousekey 400 300 1"
+send_command "/screenshot center_click.png"
+imagesdiff run4.png center_click.png
+
+send_command "/guikey -989 keyGUIHome"
+send_command "/screenshot run5.png"
+imagessame run4.png run5.png
+
+# open add server dialog
+send_command "/guikey -990 keyGUIInsert"
+send_command "/screenshot add_server_empty.png"
+imagesdiff run5.png add_server_empty.png
+
+send_command "/sendchars local"
+send_command "/screenshot add_server_name.png"
+imagesdiff add_server_empty.png add_server_name.png
+
+send_command "/guikey 9 keyGUITab"
+send_command "/screenshot add_server_adress1.png"
+imagesdiff add_server_name.png add_server_adress1.png
+
+send_command "/sendchars 127.0.0.1"
+send_command "/screenshot add_server_adress2.png"
+imagesdiff add_server_adress1.png add_server_adress2.png
+
+send_command "/guikey 9 keyGUITab"
+send_command "/screenshot add_server_port.png"
+imagesdiff add_server_adress2.png add_server_port.png
+
+send_command "/guikey 9 keyGUITab"
+send_command "/screenshot add_server_type.png"
+imagesdiff add_server_port.png add_server_type.png
+
+send_command "/guikey 9 keyGUITab"
+send_command "/screenshot add_server_description1.png"
+imagesdiff add_server_type.png add_server_description1.png
+
+send_command "/sendchars local server"
+send_command "/screenshot add_server_description2.png"
+imagesdiff add_server_description1.png add_server_description2.png
+
+send_command "/guikey 9 keyGUITab"
+send_command "/screenshot add_server_url1.png"
+imagesdiff add_server_description2.png add_server_url1.png
+
+send_command "/sendchars http://localhost/"
+send_command "/screenshot add_server_url2.png"
+imagesdiff add_server_url1.png add_server_url2.png
+
+send_command "/guikey 9 keyGUITab"
+send_command "/guikey 9 keyGUITab"
+send_command "/guikey 9 keyGUITab"
+send_command "/guikey 9 keyGUITab"
+
+# add new server
+send_command "/guikey 13 keyGUISelect2"
+send_command "/screenshot new_server.png"
+imagesdiff add_server_url2.png new_server.png
+
+# press about button
+send_command "/sendmousekey 500 20 1"
+send_command "/screenshot about.png"
+imagesdiff new_server.png about.png
+
+# open about page
+send_command "/sendmousekey 500 20 1"
+send_command "/screenshot about.png"
+
+# open about manaverse page
+send_command "/sendmousekey 300 ${ABOUTYOFFSET} 1"
+send_command "/screenshot about2.png"
+imagesdiff about.png about2.png
+
+# open help window again
+send_command "/sendmousekey 220 200 1"
+send_command "/screenshot help2.png"
+imagesdiff about2.png help2.png
+
+# other comparisions
+imagesdiff downkey.png help.png
+imagesdiff help.png setup.png
+imagesdiff run5.png add_server_name.png
+imagesdiff run5.png add_server_adress1.png
+imagesdiff run5.png add_server_adress2.png
+imagesdiff run5.png add_server_port.png
+imagesdiff run5.png add_server_type.png
+imagesdiff run5.png add_server_description1.png
+imagesdiff run5.png add_server_description2.png
+imagesdiff run5.png add_server_url1.png
+imagesdiff run5.png add_server_url2.png
+imagesdiff run5.png new_server.png
+imagesdiff run5.png about.png
+imagesdiff run5.png about2.png
+imagesdiff run5.png help2.png
+
+imagesdiff run4.png add_server_name.png
+imagesdiff run4.png add_server_adress1.png
+imagesdiff run4.png add_server_adress2.png
+imagesdiff run4.png add_server_port.png
+imagesdiff run4.png add_server_type.png
+imagesdiff run4.png add_server_description1.png
+imagesdiff run4.png add_server_description2.png
+imagesdiff run4.png add_server_url1.png
+imagesdiff run4.png add_server_url2.png
+imagesdiff run4.png new_server.png
+imagesdiff run4.png about.png
+imagesdiff run4.png about2.png
+imagesdiff run4.png help2.png
+
+imagesdiff help.png about.png
+imagesdiff help.png help2.png
+
+# final delay
+sleep 5
+
+kill_app
+final_log
+check_assert
+
+exit 0
