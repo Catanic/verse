@@ -71,6 +71,10 @@ PRAGMA45(GCC diagnostic ignored "-Wcast-qual")
 #include "debug/nvwa/fast_mutex.h"         // nvwa::fast_mutex
 #include "debug/nvwa/static_assert.h"      // STATIC_ASSERT
 
+#ifdef TRACY_ENABLE
+#include <tracy/Tracy.hpp>
+#endif
+
 #undef  _DEBUG_NEW_EMULATE_MALLOC
 #undef  _DEBUG_NEW_REDEFINE_NEW
 /**
@@ -677,6 +681,9 @@ static void* alloc_mem(size_t size, const char* file, int line, bool is_array)
         fprintf(new_output_fp, ")\n");
     }
     total_mem_alloc += size;
+#ifdef TRACY_ENABLE
+    TracyAlloc(usr_ptr, size);
+#endif
     return usr_ptr;
 }
 
@@ -756,6 +763,9 @@ static void free_pointer(void* usr_ptr, void* addr, bool is_array)
     }
 #if _DEBUG_NEW_REMEMBER_STACK_TRACE
     free(ptr->stacktrace);
+#endif
+#ifdef TRACY_ENABLE
+    TracyFree(usr_ptr);
 #endif
     free(ptr);
     return;

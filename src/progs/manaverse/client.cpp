@@ -36,6 +36,10 @@
 #include "soundmanager.h"
 #include "spellmanager.h"
 
+#ifdef TRACY_ENABLE
+#include <tracy/Tracy.hpp>
+#endif
+
 #include "being/localclan.h"
 #include "being/localplayer.h"
 #include "being/playerinfo.h"
@@ -958,6 +962,9 @@ int Client::gameExec()
 
     while (mState != State::EXIT)
     {
+#ifdef TRACY_ENABLE
+        FrameMark;
+#endif
         PROFILER_START();
         PERF_STAT(0);
         if (eventsManager.handleEvents())
