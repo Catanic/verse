@@ -6,10 +6,13 @@ for performance analysis.
 
 ## Prerequisites
 
-Enable developer mode on the Deck and install build tools and libraries:
+Enable developer mode on the Deck and install build tools and libraries
+including Mesa for OpenGL headers:
 
 ```bash
-sudo pacman -S --needed base-devel cmake git sdl2 sdl2_image sdl2_mixer sdl2_ttf sdl2_net sdl2_gfx libpng libxml2 curl
+sudo pacman -S --needed base-devel cmake git \
+    sdl2 sdl2_image sdl2_mixer sdl2_ttf sdl2_net sdl2_gfx \
+    libpng zlib freetype2 harfbuzz libxml2 curl mesa
 ```
 
 ## Building
