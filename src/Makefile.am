@@ -135,24 +135,28 @@ manaplus_CXXFLAGS += -DOPENGLERRORS
 endif
 
 if ENABLE_MEM_DEBUG
-dyecmd_CXXFLAGS += -DENABLE_MEM_DEBUG -DDEBUG_DUMP_LEAKS
-manaplus_CXXFLAGS += -DENABLE_MEM_DEBUG -DDEBUG_DUMP_LEAKS
+ dyecmd_CXXFLAGS += -DENABLE_MEM_DEBUG -DDEBUG_DUMP_LEAKS -DTRACY_ENABLE -DTRACY_MEMORY_CALL_STACK=16
+ manaplus_CXXFLAGS += -DENABLE_MEM_DEBUG -DDEBUG_DUMP_LEAKS -DTRACY_ENABLE -DTRACY_MEMORY_CALL_STACK=16
 
-manaplus_SOURCES = debug/nvwa/_nvwa.h \
-	      debug/nvwa/c++11.h \
-	      debug/nvwa/debug_new.cpp \
-	      debug/nvwa/debug_new.h \
-	      debug/nvwa/fast_mutex.h \
-	      debug/nvwa/static_assert.h
-dyecmd_SOURCES =  debug/nvwa/_nvwa.h \
-	      debug/nvwa/c++11.h \
-	      debug/nvwa/debug_new.cpp \
-	      debug/nvwa/debug_new.h \
-	      debug/nvwa/fast_mutex.h \
-	      debug/nvwa/static_assert.h
+ AM_CPPFLAGS += -I$(srcdir)/../thirdparty/tracy
+
+ manaplus_SOURCES = debug/nvwa/_nvwa.h \
+                debug/nvwa/c++11.h \
+                debug/nvwa/debug_new.cpp \
+                debug/nvwa/debug_new.h \
+                debug/nvwa/fast_mutex.h \
+                debug/nvwa/static_assert.h \
+                ../thirdparty/tracy/TracyClient.cpp
+ dyecmd_SOURCES =  debug/nvwa/_nvwa.h \
+                debug/nvwa/c++11.h \
+                debug/nvwa/debug_new.cpp \
+                debug/nvwa/debug_new.h \
+                debug/nvwa/fast_mutex.h \
+                debug/nvwa/static_assert.h \
+                ../thirdparty/tracy/TracyClient.cpp
 else
-manaplus_SOURCES =
-dyecmd_SOURCES =
+ manaplus_SOURCES =
+ dyecmd_SOURCES =
 endif
 
 if ENABLE_STLDEBUG
