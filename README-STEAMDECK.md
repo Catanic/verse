@@ -9,7 +9,7 @@ for performance analysis.
 Enable developer mode on the Deck and install build tools and libraries:
 
 ```bash
-sudo pacman -S --needed base-devel cmake git sdl2 sdl2_image sdl2_mixer sdl2_ttf sdl2_net libpng libxml2 curl
+sudo pacman -S --needed base-devel cmake git sdl2 sdl2_image sdl2_mixer sdl2_ttf sdl2_net sdl2_gfx libpng libxml2 curl
 ```
 
 ## Building
