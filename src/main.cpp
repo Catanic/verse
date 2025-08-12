@@ -21,6 +21,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef TRACY_ENABLE
+#include "Tracy.hpp"
+#endif
+
 #include "maingui.h"
 
 #ifdef _WIN32
@@ -39,6 +43,9 @@ extern "C"
 
 int main(int argc, char *argv[])
 {
+#ifdef TRACY_ENABLE
+    ZoneScopedN("Main");
+#endif
     return mainGui(argc, argv);
 }
 #endif  // !defined(UNITTESTS) && !defined(ANDROID)

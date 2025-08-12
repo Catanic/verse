@@ -87,8 +87,7 @@ ENDIF (USE_X11)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
 IF (ENABLE_TRACY)
-    INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/thirdparty/tracy)
-    SET(FLAGS "${FLAGS} -DTRACY_ENABLE -DTRACY_MEMORY_CALL_STACK=16 -DENABLE_MEM_DEBUG -DDEBUG_DUMP_LEAKS")
+    SET(FLAGS "${FLAGS} -DTRACY_MEMORY_CALL_STACK=16 -DENABLE_MEM_DEBUG -DDEBUG_DUMP_LEAKS")
 ENDIF()
 
 IF (USE_SDL2)
@@ -2252,6 +2251,12 @@ find_package(LibXml2 REQUIRED)
 target_include_directories(manaplus PRIVATE ${LIBXML2_INCLUDE_DIR})
 target_link_libraries(manaplus PRIVATE LibXml2::LibXml2)
 target_compile_definitions(manaplus PRIVATE LIBXML_LEGACY=1)
+
+if(ENABLE_TRACY)
+    target_include_directories(manaplus PRIVATE ${CMAKE_SOURCE_DIR}/thirdparty/tracy)
+    target_compile_definitions(manaplus PRIVATE TRACY_ENABLE=1)
+    target_link_libraries(manaplus PRIVATE dl pthread)
+endif()
 #ADD_EXECUTABLE(dyecmd WIN32 ${DYE_CMD_SRCS})
 
 IF (USE_SDL2)

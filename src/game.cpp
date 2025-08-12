@@ -21,6 +21,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef TRACY_ENABLE
+#include "Tracy.hpp"
+#endif
+
 #include "game.h"
 
 #include "actormanager.h"
@@ -661,16 +665,40 @@ bool Game::saveScreenshot(SDL_Surface *const screenshot,
 
 void Game::logic()
 {
+#ifdef TRACY_ENABLE
+    ZoneScopedN("GameTick");
+#endif
     BLOCK_START("Game::logic")
+#ifdef TRACY_ENABLE
+    {
+        ZoneScopedN("Input");
+#endif
     handleInput();
+#ifdef TRACY_ENABLE
+    }
+#endif
 
     // Handle all necessary game logic
     if (actorManager != nullptr)
         actorManager->logic();
+#ifdef TRACY_ENABLE
+    {
+        ZoneScopedN("Particles");
+#endif
     if (particleEngine != nullptr)
         particleEngine->update();
+#ifdef TRACY_ENABLE
+    }
+#endif
+#ifdef TRACY_ENABLE
+    {
+        ZoneScopedN("MapUpdate");
+#endif
     if (mCurrentMap != nullptr)
         mCurrentMap->update(1);
+#ifdef TRACY_ENABLE
+    }
+#endif
 
     BLOCK_END("Game::logic")
 }
@@ -722,7 +750,14 @@ void Game::slowLogic()
     if (skillDialog != nullptr)
         skillDialog->slowLogic();
 
+    #ifdef TRACY_ENABLE
+    {
+        ZoneScopedN("NetCounters");
+    #endif
     PacketCounters::update();
+    #ifdef TRACY_ENABLE
+    }
+    #endif
 
     // Handle network stuff
     if (!gameHandler->isConnected())
