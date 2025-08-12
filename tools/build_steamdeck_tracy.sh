@@ -9,30 +9,33 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BUILD_DIR="$ROOT_DIR/build-steamdeck-tracy"
 
+# Refuse to run as root so pkg-config can locate the Deck's libraries
+if (( EUID == 0 )); then
+  echo "Please run this script without sudo; it will use sudo when installing packages." >&2
+  exit 1
+fi
+
 # Packages needed to build on Steam Deck
 PACKAGES=(
-  base-devel cmake git
+  base-devel cm<<<<<<< obn4gu-codex/identify-and-fix-steam-deck-build-issuesake git
   sdl2 sdl2_image sdl2_mixer sdl2_ttf sdl2_net sdl2_gfx
-  libpng zlib freetype2 harfbuzz libxml2 curl
+  libpng zlib freetype<<<<<<< obn4gu-codex/identify-and-fix-steam-deck-build-issues2 harfbuzz libxml2 curl
   mesa libglvnd glu
   libjxl libjpeg-turbo libtiff libavif libwebp
-  bzip2 brotli glib2 graphite2 libidn2 zstd krb5 openssl
+  bzip2 brotli glib2 graphite libidn2 zstd krb5 openssl
   libpsl libssh2 libnghttp2 libnghttp3 xz icu
 )
 
 # Install dependencies with pacman if available
 if command -v pacman >/dev/null 2>&1; then
-  if (( EUID != 0 )); then
-    SUDO=sudo
-  else
-    SUDO=""
-  fi
-  $SUDO pacman -S --needed --noconfirm "${PACKAGES[@]}"
+  sudo pacman -S --needed --noconfirm "${PACKAGES[@]}"
 else
   echo "Warning: pacman not found. Ensure the following packages are installed:" >&2
   echo "  ${PACKAGES[*]}" >&2
 fi
 
+# Ensure pkg-config searches the system directories
+export PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-/usr/lib/pkgconfig:/usr/share/pkgconfig}"
 cmake -S "$ROOT_DIR" -B "$BUILD_DIR" \
   -DCMAKE_BUILD_TYPE=RelWithDebInfo \
   -DENABLE_TRACY=ON \

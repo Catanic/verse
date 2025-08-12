@@ -15,7 +15,7 @@ base-devel cmake git \
     libpng zlib freetype2 harfbuzz libxml2 curl \ 
     mesa libglvnd glu \ 
     libjxl libjpeg-turbo libtiff libavif libwebp \ 
-    bzip2 brotli glib2 graphite2 libidn2 zstd krb5 openssl \ 
+    bzip2 brotli glib2 graphite libidn2 zstd krb5 openssl \
     libpsl libssh2 libnghttp2 libnghttp3 xz icu
 ```
 
@@ -27,14 +27,16 @@ sudo pacman -S --needed base-devel cmake git \
     libpng zlib freetype2 harfbuzz libxml2 curl \ 
     mesa libglvnd glu \ 
     libjxl libjpeg-turbo libtiff libavif libwebp \ 
-    bzip2 brotli glib2 graphite2 libidn2 zstd krb5 openssl \ 
+    bzip2 brotli glib2 graphite libidn2 zstd krb5 openssl \
     libpsl libssh2 libnghttp2 libnghttp3 xz icu
 ```
 
 ## Building
 
 Run the helper script to install dependencies, configure and compile with
-Tracy support. Use `sudo` if prompted for package installation:
+Tracy support. Run it as your regular user; it will prompt for your password
+to install packages when required:
+
 
 ```bash
 sudo ./tools/build_steamdeck_tracy.sh
