@@ -44,6 +44,19 @@ Azure CI: [![Build Status macosx](https://dev.azure.com/manaplus/ManaPlus/_apis/
  - [libpng](http://www.libpng.org/) (save screenshots)
  - [zlib](http://zlib.net/) (Archives)
 
+Make sure the development headers for these libraries are installed. On
+Debian or Ubuntu the required packages can be installed with:
+
+    sudo apt install build-essential cmake pkg-config \
+        libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev \
+        libsdl2-net-dev libsdl2-ttf-dev libsdl2-gfx-dev \
+        libcurl4-openssl-dev
+
+For Arch Linux and derivatives use:
+
+    sudo pacman -S base-devel cmake sdl2 sdl2_image \
+        sdl2_mixer sdl2_net sdl2_ttf sdl2_gfx curl
+
 #### Optional dependencies:
 
  - [gettext](https://www.gnu.org/software/gettext/) (translations)
