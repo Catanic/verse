@@ -30,17 +30,20 @@ and some libraries. The required libraries are:
 On most distributions the development packages for these libraries must be
 installed before building.  For example, on Debian or Ubuntu you can run:
 
-    sudo apt-get install build-essential cmake pkg-config \
+z16sra-codex/fix-csudo pacman -S --needed base-devel cmake git \
+    sdl2 sdl2_image sdl2_mixer sdl2_ttf sdl2_net sdl2_gfx \
+    libpng zlib freetype2 harfbuzz libxml2 curl mesamake-configuration-errors
+    sudo apt install build-essential cmake pkg-config \
         libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev \
         libsdl2-net-dev libsdl2-ttf-dev libsdl2-gfx-dev \
-        libcurl4-openssl-dev libpng-dev zlib1g-dev \
-        libfreetype6-dev libharfbuzz-dev libgl1-mesa-dev
+        libcurl4-openssl-dev
 
 On Arch Linux and derivatives the equivalent command is:
 
+z16sra-codex/fix-cmake-configuration-errors
     sudo pacman -S base-devel cmake sdl2 sdl2_image \
-        sdl2_mixer sdl2_net sdl2_ttf sdl2_gfx curl \
-        libpng zlib freetype2 harfbuzz mesa
+        sdl2_mixer sdl2_net sdl2_ttf sdl2_gfx curl
+main
 
 If you've cloned the Git repository, you will also need these tools to compile:
 
