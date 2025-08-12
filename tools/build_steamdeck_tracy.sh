@@ -13,7 +13,11 @@ BUILD_DIR="$ROOT_DIR/build-steamdeck-tracy"
 PACKAGES=(
   base-devel cmake git
   sdl2 sdl2_image sdl2_mixer sdl2_ttf sdl2_net sdl2_gfx
-  libpng zlib freetype2 harfbuzz libxml2 curl mesa
+  libpng zlib freetype2 harfbuzz libxml2 curl
+  mesa libglvnd glu
+  libjxl libjpeg-turbo libtiff libavif libwebp
+  bzip2 brotli glib2 graphite2 libidn2 zstd krb5 openssl
+  libpsl libssh2 libnghttp2 libnghttp3 xz icu
 )
 
 # Install dependencies with pacman if available
